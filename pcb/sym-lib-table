@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name car-rescue)(type Legacy)(uri ${KIPRJMOD}/car-rescue.lib)(options "")(descr ""))
+  (lib (name arduino)(type Legacy)(uri ${KIPRJMOD}/arduino-kicad-library-master/arduino.lib)(options "")(descr ""))
+)
