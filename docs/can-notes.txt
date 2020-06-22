@@ -1,0 +1,23 @@
+0x381 = linker deur
+0x3B5 = rechter deur
+1e bit = 1 = deur open 0 = deur dicht
+3e bit = raam hoogte
+
+0x3E1 = climate control?
+5e bit = toerental ventilator
+1e bit = 32 is koud volledig aan, , 0 iets daarboven
+7e bit = 132 = airco uit, 134 = airco aan
+
+0x3E3 = climate control?
+5e bit = 0 = binnen cirulatie uit, 128 aan
+
+0x531 = knipperlicht achtig iets
+bit 2 = 17 = knipperlicht links 18 = knipperlicht rechts 27=geveranlichten
+
+
+0x3C3 = stuur iets
+0 = kleine beweging?
+1 bit  0 tot 128 linksom, 128 tot 255 rechtsom
+2/3 iets van acceleratie 
+
+
