@@ -1,6 +1,6 @@
 0x381 = linker deur
 0x3B5 = rechter deur
-1e bit = 1 = deur open 0 = deur dicht
+1e bit = 1 = deur open 0 = deur dicht 2 = deur op slot                                         
 3e bit = raam hoogte
 
 0x3E1 = climate control?
@@ -21,3 +21,27 @@ bit 2 = 17 = knipperlicht links 18 = knipperlicht rechts 27=geveranlichten
 2/3 iets van acceleratie 
 
 
+0x47a
+2e bit = scroll knoje dashboard
+
+0x151
+2e bit= gordel 
+160 = niet aangesloten, 176 = wel
+224 = rechter stoel aangesloten
+240 = beide aangesloten
+
+0x470
+1e bit achteruit
+192 = niet achteruit, 224 wel
+ 
+ 0x35B
+ 5e bit
+ 40 niks ingedrukt
+ 43 rem
+ 32 koppeling
+ 35 koppeling en rem
+ 
+ 0x621
+ 1e bit
+ 0 = handrem los
+ 32 = handrem vast
