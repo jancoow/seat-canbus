@@ -1,7 +1,7 @@
 #ifndef WheelControlCarCanbusMessageType_h
 #define WheelControlCarCanbusMessageType_h
 
-#include "CarCanbusMessageHandler.h"
+#include "../CarCanbusMessageHandler.h"
 
 #define wheel_control_address 0x5c1
 

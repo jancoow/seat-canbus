@@ -1,7 +1,7 @@
 #ifndef LightStatusCarCanbusMessageType_h
 #define LightStatusCarCanbusMessageType_h
 
-#include "CarCanbusMessageHandler.h"
+#include "../CarCanbusMessageHandler.h"
 
 #define light_status_address 0x621
 
