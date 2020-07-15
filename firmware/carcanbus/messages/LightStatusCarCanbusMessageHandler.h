@@ -27,10 +27,9 @@ class LightStatusCarCanbusMessageHandler: public CarCanbusMessageHandler{
       // Low beam light status changed
       if(lowBeamLightStatus != message[low_beam_light_index]){
         lowBeamLightStatus = message[low_beam_light_index];
-
         if(lowBeamLightStatus == low_beam_light_off){
           return {onLowBeamHeadLightsOff, 0};
-        }else if(lowBeamLightStatus == low_beam_light_on){
+        }else if(lowBeamLightStatus > low_beam_light_off){
           return {onLowBeamHeadLightsOn, 0};
         }
       }

@@ -1,37 +1,105 @@
-#ifndef CarCanbus_h
-#define CarCanbus_h
+#ifndef CarLed_h
+#define CarLed_h
 
-#include <SPI.h>
-#include "mcp_can.h"
-#include "CarCanbusMessageHandler.h"
-#include "LightStatusCarCanbusMessageHandler.h"
-#include "WheelControlCarCanbusMessageHandler.h"
-#include "TurnSignalCarCanbusMessageHandler.h"
-#include "LeftDoorMessageHandler.h"
-#include "RightDoorMessageHandler.h"
-#include "CarCanbusEventType.h"
+#include <Adafruit_NeoPixel.h> 
+#include "LedMode.h"
+#include "ledmodes/ColorLedMode.h"
 
-#define CS_PIN 10
+#define left_neopixel_pin   5
+#define right_neopixel_pin  6
+#define number_of_leds      34
 
-#define number_of_message_handlers 6
+#define number_of_led_modes 1
 
-class CarCanbus{
+
+class CarLed{
   public:
-    CarCanbus();
-    CarCanbusEvent receiveMessage();
+    CarLed(){
+      this->strip_left.begin();  
+      this->strip_right.begin();
 
- private:
-    MCP_CAN* mcpCan;
-    unsigned char len = 0;
-    unsigned char buf[8];
-    
-    CarCanbusMessageHandler* messageHandlers[number_of_message_handlers] = {
-      new LightStatusCarCanbusMessageHandler(),
-      new WheelControlCarCanbusMessageHandler(),
-      new TurnSignalCarCanbusMessageHandler(),
-      new LeftDoorCarCanbusMessageHandler(),
-      new RightDoorCarCanbusMessageHandler()
+
+      // Set initial color
+      for(int i = 0; i < number_of_leds; i++){
+        this->strip_left.setPixelColor(i, 200, 50, 0);
+        this->strip_right.setPixelColor(i, 200, 50, 0);
+      }
+
+      this->strip_left.show();
+      this->strip_right.show();
     };
 
+    void handleEvent(CarCanbusEvent *event){
+        if(event->eventType == onTurnLightLeftOn){
+          //set_left_side_led_color(255, 165, 0);
+        }else if(event->eventType == onTurnLightLeftOff){
+          //set_left_side_led_color(0, 0, 0);
+        }else if(event->eventType == onTurnLightRightOn){
+          //set_right_side_led_color(255, 165, 0);
+        }else if(event->eventType == onTurnLightRightOff){
+          //set_right_side_led_color(0, 0, 0);
+        }else if(event->eventType == onHazardLightsOn){
+          //set_side_led_color(255, 165, 0);
+        }else if(event->eventType == onHazardLightsOff){
+          //set_side_led_color(0, 0, 0);
+        }else if(event->eventType == onLeftDoorOpen){
+          //set_left_front_led_color(255, 0, 0);
+        }else if(event->eventType == onLeftDoorClose){
+          //set_left_front_led_color(0, 0, 0);
+        }else if(event->eventType == onRightDoorOpen){
+          //set_right_front_led_color(255, 0, 0);
+        }else if(event->eventType == onLeftDoorClose){
+          //set_right_front_led_color(0, 0, 0);
+        }else if(event->eventType == onScrollUpPress){
+          setNextMainMode();
+        }else if(event->eventType == onScrollDownPress){
+          setPreviousMainMode();
+        }else if(event->eventType == onLowBeamHeadLightsOn){
+          this->dimLevel = 100;
+          strip_left.setBrightness(this->dimLevel);
+          strip_right.setBrightness(this->dimLevel);
+        }else if(event->eventType == onLowBeamHeadLightsOff){
+          this->dimLevel = 254;
+          strip_left.setBrightness(this->dimLevel);
+          strip_right.setBrightness(this->dimLevel);
+        }
+
+        this->ledModes[current_led_mode]->handleEvent(event, &this->strip_left, &this->strip_right);
+
+        strip_left.show();
+        strip_right.show();
+    };
+
+ private:
+    Adafruit_NeoPixel strip_left = Adafruit_NeoPixel(number_of_leds, left_neopixel_pin, NEO_GRB + NEO_KHZ800);
+    Adafruit_NeoPixel strip_right = Adafruit_NeoPixel(number_of_leds, right_neopixel_pin, NEO_GRB + NEO_KHZ800);
+
+    int dimLevel = 254;
+
+    int current_led_mode = 0;
+    LedMode* ledModes[number_of_led_modes] = {
+      new ColorLedMode()
+    };
+
+
+    void setNextMainMode(){
+      Serial.println("Going to next mode");
+      if(current_led_mode == number_of_led_modes-1){
+        current_led_mode = 0;
+      }else{
+        current_led_mode+=1;
+      }
+    }
+
+    void setPreviousMainMode(){
+      Serial.println("Going to previous mode");
+      if(current_led_mode == 0){
+        current_led_mode = number_of_led_modes-1;
+      }else{
+        current_led_mode-=1;
+      }
+    }
+
+    void tick();    
 };
 #endif
