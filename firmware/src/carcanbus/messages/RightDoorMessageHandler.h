@@ -25,13 +25,13 @@ class RightDoorCarCanbusMessageHandler: public CarCanbusMessageHandler{
         }else if(message[right_door_status] == 0){
           return {onRightDoorClose, 0};
         }      
-      }else if(message[windowHeight] != windowHeight){
-        if(message[windowHeight] > windowHeight){
-           event = {onRightDoorWindowUp, message[windowHeight]};
+      }else if(message[right_window_status] != windowHeight){
+        if(message[right_window_status] > windowHeight){
+           event = {onRightDoorWindowUp, message[right_window_status]};
         }else{
-          event = {onRightDoorWindowDown, message[windowHeight]};
+          event = {onRightDoorWindowDown, message[right_window_status]};
         }
-        windowHeight = message[windowHeight];
+        windowHeight = message[right_window_status];
       }
 
       return event;

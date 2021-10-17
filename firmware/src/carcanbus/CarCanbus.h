@@ -32,13 +32,13 @@ class CarCanbus{
             mcpCan->readMsgBuf(&len, buf);
             unsigned long canId = mcpCan->getCanId();
             
-            // Serial.print(canId, HEX);
-            // Serial.print(":");
-            // for(int i = 0; i < 8; i++){
-            //   Serial.print(buf[i]);
-            //   Serial.print("  ");
-            // }
-            // Serial.println();
+            //Serial.print(canId, HEX);
+            //Serial.print(":");
+            //for(int i = 0; i < 8; i++){
+            //  Serial.print(buf[i]);
+            //  Serial.print("  ");
+            //}
+            //Serial.println();
             
             for(int i = 0; i < number_of_message_handlers; i++){
               if(this->messageHandlers[i]->address == canId){

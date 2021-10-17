@@ -4,6 +4,7 @@
 #include <Adafruit_NeoPixel.h> 
 #include "LedMode.h"
 #include "ledmodes/ColorLedMode.h"
+#include "CarLedStrip.h"
 
 #define left_neopixel_pin   5
 #define right_neopixel_pin  6
@@ -12,21 +13,10 @@
 #define number_of_led_modes 1
 
 
-class CarLed{
+class CarLedController{
   public:
-    CarLed(){
-      this->strip_left.begin();  
-      this->strip_right.begin();
+    CarLedController(){
 
-
-      // Set initial color
-      for(int i = 0; i < number_of_leds; i++){
-        this->strip_left.setPixelColor(i, 200, 50, 0);
-        this->strip_right.setPixelColor(i, 200, 50, 0);
-      }
-
-      this->strip_left.show();
-      this->strip_right.show();
     };
 
     void handleEvent(CarCanbusEvent *event){
@@ -46,39 +36,29 @@ class CarLed{
           //set_left_front_led_color(255, 0, 0);
         }else if(event->eventType == onLeftDoorClose){
           //set_left_front_led_color(0, 0, 0);
-        }else if(event->eventType == onRightDoorOpen){
-          //set_right_front_led_color(255, 0, 0);
-        }else if(event->eventType == onLeftDoorClose){
-          //set_right_front_led_color(0, 0, 0);
+        }else if(event->eventType == onLowBeamHeadLightsOn){
+          carLedStrip.setBrightness(50);
+          carLedStrip.show();
+        }else if(event->eventType == onLowBeamHeadLightsOff){
+          carLedStrip.setBrightness(100);
+          carLedStrip.show();
         }else if(event->eventType == onScrollUpPress){
           setNextMainMode();
         }else if(event->eventType == onScrollDownPress){
           setPreviousMainMode();
-        }else if(event->eventType == onLowBeamHeadLightsOn){
-          this->dimLevel = 100;
-          strip_left.setBrightness(this->dimLevel);
-          strip_right.setBrightness(this->dimLevel);
-        }else if(event->eventType == onLowBeamHeadLightsOff){
-          this->dimLevel = 254;
-          strip_left.setBrightness(this->dimLevel);
-          strip_right.setBrightness(this->dimLevel);
         }
 
-        this->ledModes[current_led_mode]->handleEvent(event, &this->strip_left, &this->strip_right);
-
-        strip_left.show();
-        strip_right.show();
+        this->ledModes[current_led_mode]->handleEvent(event);
     };
-
+    void tick(){
+       this->ledModes[current_led_mode]->handleTick();
+    }    
  private:
-    Adafruit_NeoPixel strip_left = Adafruit_NeoPixel(number_of_leds, left_neopixel_pin, NEO_GRB + NEO_KHZ800);
-    Adafruit_NeoPixel strip_right = Adafruit_NeoPixel(number_of_leds, right_neopixel_pin, NEO_GRB + NEO_KHZ800);
-
-    int dimLevel = 254;
+    CarLedStrip carLedStrip;
 
     int current_led_mode = 0;
     LedMode* ledModes[number_of_led_modes] = {
-      new ColorLedMode()
+      new ColorLedMode(&carLedStrip)
     };
 
 
@@ -100,6 +80,6 @@ class CarLed{
       }
     }
 
-    void tick();    
+
 };
 #endif

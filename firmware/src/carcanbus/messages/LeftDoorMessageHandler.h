@@ -17,7 +17,7 @@ class LeftDoorCarCanbusMessageHandler: public CarCanbusMessageHandler{
     
     CarCanbusEvent handleMessage(unsigned char *message){
       CarCanbusEvent event = {noEvent, 0};
-      
+
       if(message[left_door_status] != doorStatus){
         doorStatus = message[left_door_status];
         if(message[left_door_status] == 1){
@@ -25,13 +25,13 @@ class LeftDoorCarCanbusMessageHandler: public CarCanbusMessageHandler{
         }else if(message[left_door_status] == 0){
           return {onLeftDoorClose, 0};
         }      
-      }else if(message[windowHeight] != windowHeight){
-        if(message[windowHeight] > windowHeight){
-           event = {onLeftDoorWindowUp, message[windowHeight]};
+      }else if(message[left_window_status] != windowHeight){
+        if(message[left_window_status] > windowHeight){
+           event = {onLeftDoorWindowUp, message[left_window_status]};
         }else{
-          event = {onLeftDoorWindowDown, message[windowHeight]};
+          event = {onLeftDoorWindowDown, message[left_window_status]};
         }
-        windowHeight = message[windowHeight];
+        windowHeight = message[left_window_status];
       }
 
       return event;

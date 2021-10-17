@@ -1,10 +1,9 @@
 #include "carcanbus/CarCanbus.h"
 #include "carcanbus/CarCanbusEventType.h"
-#include "carled/CarLed.h"
+#include "carled/CarLedController.h"
 
 #define sig 2
 #define power 4
-
 
 int r = 254;
 int g = 0;
@@ -21,7 +20,7 @@ int side_b = b;
 unsigned long powerOffTime = millis();
 bool lastPowerState = 1;
 
-CarLed* carLed;
+CarLedController* carLedController;
 CarCanbus* carCanbus;
 CarCanbusEvent event;
 
@@ -34,7 +33,7 @@ void setup() {
   digitalWrite(power, 1);
 
   carCanbus = new CarCanbus();
-  carLed = new CarLed();
+  carLedController = new CarLedController();
 }
 
 
@@ -45,8 +44,11 @@ void loop() {
    if(event.eventType != noEvent){
       Serial.print("Event happened!: ");
       Serial.println(event.eventType);
-      carLed->handleEvent(&event);
+      carLedController->handleEvent(&event);
     }
+  carLedController->tick();
+  delay(0.01);
+
 
   //if(digitalRead(sig) != lastPowerState){ // If ignition changed
   //  lastPowerState = digitalRead(sig);

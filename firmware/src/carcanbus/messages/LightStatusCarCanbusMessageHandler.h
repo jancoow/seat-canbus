@@ -24,12 +24,13 @@ class LightStatusCarCanbusMessageHandler: public CarCanbusMessageHandler{
     LightStatusCarCanbusMessageHandler(): CarCanbusMessageHandler(light_status_address){};
     
     CarCanbusEvent handleMessage(unsigned char *message){
-      // Low beam light status changed
+       // Low beam light status changed
       if(lowBeamLightStatus != message[low_beam_light_index]){
         lowBeamLightStatus = message[low_beam_light_index];
+
         if(lowBeamLightStatus == low_beam_light_off){
           return {onLowBeamHeadLightsOff, 0};
-        }else if(lowBeamLightStatus > low_beam_light_off){
+        }else if(lowBeamLightStatus > low_beam_light_on){
           return {onLowBeamHeadLightsOn, 0};
         }
       }
