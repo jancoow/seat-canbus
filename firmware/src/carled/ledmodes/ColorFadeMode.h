@@ -73,17 +73,6 @@ class ColorLedMode: public LedMode{
     }
 
     void handleTick(){
-      if(animation_running){
-        Adafruit_NeoPixel *strip;
-        if(left)
-          strip = &this->car_led_strip->strip_left;
-        else
-          strip = &this->car_led_strip->strip_right;
-        
-        if(step == 20000){
-          animation_running = false;
-          return;
-        }
         for(int i = number_of_front_leds; i < number_of_leds; i++){
           if((i-number_of_front_leds) * 255 < step*20){
             if(left)

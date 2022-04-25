@@ -7,6 +7,7 @@ class LedMode{
   public:
     virtual void handleEvent(CarCanbusEvent *event);
     virtual void handleTick();
+    virtual void onActivate();
   protected:
      LedMode(CarLedStrip* car_led_strip): car_led_strip(car_led_strip){};
      CarLedStrip* car_led_strip;

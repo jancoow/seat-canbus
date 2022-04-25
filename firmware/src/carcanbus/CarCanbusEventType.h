@@ -16,6 +16,9 @@ enum CarCanbusEventType {
   onTurnLightLeftOn, onTurnLightLeftOff, 
   onTurnLightRightOn, onTurnLightRightOff,
   onHazardLightsOn, onHazardLightsOff,
+  onBrakeLightsOn, onBrakeLightsOff,
+  
+  onWheelPositionChanged,
 
   onLeftDoorOpen, onLeftDoorClose, onLeftDoorWindowUp, onLeftDoorWindowDown,
   onRightDoorOpen, onRightDoorClose, onRightDoorWindowUp, onRightDoorWindowDown

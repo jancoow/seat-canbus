@@ -1,25 +1,30 @@
-#ifndef TurnSignalCarCanbusMessageType_h
-#define TurnSignalCarCanbusMessageType_h
+#ifndef LightSignalCarCanbusMessageType_h
+#define LightSignalCarCanbusMessageType_h
 
 #include "../CarCanbusMessageHandler.h"
 
-#define turn_signal_address 0x531
+#define light_signal_address 0x531
+#define light_signal_idx 1
 
-#define turn_signal_status 1
+#define turn_signal_mask 0b00011111
+#define brake_signal_mask 0b11000000
 
 #define turn_signal_status_off 0
 #define turn_signal_status_left 17
 #define turn_signal_status_right 18
 #define turn_signal_status_hazard 27           
+#define brake_lights             64
 
-class TurnSignalCarCanbusMessageHandler: public CarCanbusMessageHandler {
+class LightSignalCarCanbusMessageHandler: public CarCanbusMessageHandler {
   public:
     uint8_t turnSignalStatus;
+    uint8_t brakeSignalStatus;
 
-    TurnSignalCarCanbusMessageHandler() : CarCanbusMessageHandler(turn_signal_address) {};
+    LightSignalCarCanbusMessageHandler() : CarCanbusMessageHandler(light_signal_address) {};
 
     CarCanbusEvent handleMessage(unsigned char *message) {
-      uint8_t turnSignalStatus = message[turn_signal_status];
+      uint8_t turnSignalStatus = message[light_signal_idx] & turn_signal_mask;
+      uint8_t brakeSignalStatus = message[light_signal_idx] & brake_signal_mask;
       CarCanbusEvent event = {noEvent, 0};
       
       if (this->turnSignalStatus != turnSignalStatus) {
@@ -40,6 +45,19 @@ class TurnSignalCarCanbusMessageHandler: public CarCanbusMessageHandler {
         }
 
         this->turnSignalStatus = turnSignalStatus;
+
+        return event;
+      }
+
+
+      if(this->brakeSignalStatus != brakeSignalStatus){
+        if(brakeSignalStatus == brake_lights){
+          event = {onBrakeLightsOn, 0};
+        }else{
+          event = {onBrakeLightsOff, 0};
+        }
+        
+        this->brakeSignalStatus = brakeSignalStatus;
       }
 
       return event;

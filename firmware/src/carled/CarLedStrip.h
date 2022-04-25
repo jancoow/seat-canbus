@@ -16,16 +16,6 @@ class CarLedStrip{
     CarLedStrip(){
       this->strip_left.begin();  
       this->strip_right.begin();
-
-
-      // Set initial color
-      for(int i = 0; i < number_of_leds; i++){
-        this->strip_left.setPixelColor(i, 200, 50, 0);
-        this->strip_right.setPixelColor(i, 200, 50, 0);
-      }
-
-      this->strip_left.show();
-      this->strip_right.show();
     };
 
     void setLeftFrontColor(uint8_t r, uint8_t g, uint8_t b){
@@ -74,8 +64,13 @@ class CarLedStrip{
     }
 
     void setBrightness(uint8_t brightness){
+        this->brightness = brightness;
         this->strip_left.setBrightness(brightness);
         this->strip_right.setBrightness(brightness);
+    }
+
+    uint8_t getBrightness(){
+        return this->brightness;
     }
 
     void show(){
@@ -85,5 +80,7 @@ class CarLedStrip{
 
     Adafruit_NeoPixel strip_left = Adafruit_NeoPixel(number_of_leds, left_neopixel_pin, NEO_GRB + NEO_KHZ800);
     Adafruit_NeoPixel strip_right = Adafruit_NeoPixel(number_of_leds, right_neopixel_pin, NEO_GRB + NEO_KHZ800);
+
+    uint8_t brightness;
 };
 #endif

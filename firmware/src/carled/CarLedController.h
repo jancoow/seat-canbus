@@ -4,19 +4,21 @@
 #include <Adafruit_NeoPixel.h> 
 #include "LedMode.h"
 #include "ledmodes/ColorLedMode.h"
+#include "ledmodes/ColorRainbowMode.h"
+
 #include "CarLedStrip.h"
 
 #define left_neopixel_pin   5
 #define right_neopixel_pin  6
 #define number_of_leds      34
 
-#define number_of_led_modes 1
+#define number_of_led_modes 2
 
 
 class CarLedController{
   public:
     CarLedController(){
-
+      ledModes[current_led_mode]->onActivate();
     };
 
     void handleEvent(CarCanbusEvent *event){
@@ -40,12 +42,14 @@ class CarLedController{
           carLedStrip.setBrightness(50);
           carLedStrip.show();
         }else if(event->eventType == onLowBeamHeadLightsOff){
-          carLedStrip.setBrightness(100);
+          carLedStrip.setBrightness(180);
           carLedStrip.show();
         }else if(event->eventType == onScrollUpPress){
           setNextMainMode();
+          this->ledModes[current_led_mode]->onActivate();
         }else if(event->eventType == onScrollDownPress){
           setPreviousMainMode();
+          this->ledModes[current_led_mode]->onActivate();
         }
 
         this->ledModes[current_led_mode]->handleEvent(event);
@@ -58,7 +62,8 @@ class CarLedController{
 
     int current_led_mode = 0;
     LedMode* ledModes[number_of_led_modes] = {
-      new ColorLedMode(&carLedStrip)
+      new ColorLedMode(&carLedStrip),
+      new ColorRainbowMode(&carLedStrip)
     };
 
 

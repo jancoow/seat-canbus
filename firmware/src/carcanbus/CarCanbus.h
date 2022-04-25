@@ -6,18 +6,20 @@
 #include "CarCanbusMessageHandler.h"
 #include "messages/LightStatusCarCanbusMessageHandler.h"
 #include "messages/WheelControlCarCanbusMessageHandler.h"
-#include "messages/TurnSignalCarCanbusMessageHandler.h"
+#include "messages/LightSignalCarCanbusMessageHandler.h"
 #include "messages/LeftDoorMessageHandler.h"
 #include "messages/RightDoorMessageHandler.h"
+#include "messages/WheelPositionCarCanbusMessageHandler.h"
 #include "CarCanbusEventType.h"
 
 #define CS_PIN 10
-
+#define INT_PIN 2
 #define number_of_message_handlers 6
 
 class CarCanbus{
   public:
     CarCanbus(){
+      pinMode(INT_PIN, INPUT);
       this->mcpCan = new MCP_CAN(CS_PIN);
       while (CAN_OK != mcpCan->begin(CAN_200KBPS))
       {
@@ -31,14 +33,6 @@ class CarCanbus{
       if(CAN_MSGAVAIL == mcpCan->checkReceive()){
             mcpCan->readMsgBuf(&len, buf);
             unsigned long canId = mcpCan->getCanId();
-            
-            //Serial.print(canId, HEX);
-            //Serial.print(":");
-            //for(int i = 0; i < 8; i++){
-            //  Serial.print(buf[i]);
-            //  Serial.print("  ");
-            //}
-            //Serial.println();
             
             for(int i = 0; i < number_of_message_handlers; i++){
               if(this->messageHandlers[i]->address == canId){
@@ -57,9 +51,10 @@ class CarCanbus{
     CarCanbusMessageHandler* messageHandlers[number_of_message_handlers] = {
       new LightStatusCarCanbusMessageHandler(),
       new WheelControlCarCanbusMessageHandler(),
-      new TurnSignalCarCanbusMessageHandler(),
+      new LightSignalCarCanbusMessageHandler(),
       new LeftDoorCarCanbusMessageHandler(),
       new RightDoorCarCanbusMessageHandler()
+      // new WheelPositionCarCanbusMessageHandler()
     };
 
 };
