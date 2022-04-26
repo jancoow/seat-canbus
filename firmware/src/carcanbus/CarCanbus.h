@@ -14,7 +14,7 @@
 
 #define CS_PIN 10
 #define INT_PIN 2
-#define number_of_message_handlers 6
+#define number_of_message_handlers 5  // 6 when WheelPositionCarCanbusMessageHandler is enabled
 
 class CarCanbus{
   public:
